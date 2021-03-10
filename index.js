@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
 app.use(express.json());
 const Todo = require("./models/todo");
+const PORT = process.env.PORT || 3000; 
 const Updates = require("./models/updates");
 
 app.use(cors());
@@ -79,6 +81,6 @@ app.get("/getupdates", async function (req, res) {
     res.status(400).json({ message: "Please try again" });
   }
 });
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log("Running on port 3000");
 });
