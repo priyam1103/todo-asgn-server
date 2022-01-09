@@ -145,6 +145,11 @@ app.delete("/deletetodo/:id", auth, async function (req, res) {
   try {
     const id = req.params.id;
     const todo = await Todo.findOne({ _id: id });
+    const user = await User.findOne({ _id: todo.ofUser });
+    console.log(user.todos);
+    await user.todos.splice(user.todos.indexOf(id), 1);
+    await user.save();
+    console.log(user.todos);
     await Todo.findOneAndDelete({ _id: id }).then(async () => {
       res.status(200).json({ message: "Done" });
     });
