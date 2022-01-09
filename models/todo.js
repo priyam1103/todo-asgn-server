@@ -14,6 +14,10 @@ const TodoSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    ofUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
