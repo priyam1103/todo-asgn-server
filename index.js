@@ -53,7 +53,7 @@ app.post("/signup", async function (req, res) {
   }
 });
 
-app.get("/signin", async function (req, res) {
+app.post("/signin", async function (req, res) {
   try {
     const { emailId, password } = req.body;
     const user_ = await User.findOne({ emailId: emailId.trim() });
@@ -106,15 +106,19 @@ app.get("/todos", auth, async function (req, res) {
     const user_id = res.locals._id;
     const user = await User.findOne({ _id: user_id });
     var todos = [];
-    if (user.todos.length == 0) {
-      return res.status(200).json(todos);
-    }
-    await user.todos.map(async (item, index) => {
-      todos.push(await Todo.findById(item));
-      if (index == user.todos.length - 1) {
-        res.status(200).json(todos);
+    if (user.role != "admin") {
+      if (user.todos.length == 0) {
+        return res.status(200).json(todos);
       }
-    });
+      await user.todos.map(async (item, index) => {
+        todos.push(await Todo.findById(item));
+        if (index == user.todos.length - 1) {
+          res.status(200).json(todos);
+        }
+      });
+    } else {
+      res.status(200).json(await Todo.find().populate("user"));
+    }
   } catch (err) {
     console.log(err);
     res.status(400).json({ message: "Please try again" });
